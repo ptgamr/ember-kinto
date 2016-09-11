@@ -1,7 +1,6 @@
-{{input value=taskTitle}}
+{{input value=taskTitle enter="createTask"}}
 <button {{action 'createTask'}}>Add</button>
-<button {{action 'sync'}}>Sync</button>
 
-{{#each tasks as |task|}}
-  <p>{{task.title}} <a href {{action 'deleteTask' task}}>delete</a></p>
+{{#each sortedTasks as |task|}}
+  {{task-item task=task onItemUpdate=(action 'updateTask') onItemDelete=(action 'deleteTask')}}
 {{/each}}

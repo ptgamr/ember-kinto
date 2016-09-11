@@ -1,0 +1,15 @@
+{{#if isEditing}}
+  <p>
+    {{input value=task.title enter="finishEdit"}}
+    <small><a href {{action 'finishEdit'}}>done</a></small>
+  </p>
+{{else}}
+  <p>
+    <input type="checkbox" checked={{task.done}} onclick={{action "toggleDone" value="target.checked"}}>
+    <strong class="{{if task.done 'done' ''}}">{{task.title}}</strong>
+    &nbsp;&nbsp;
+    <small>
+      <a href {{action 'startEdit'}}>edit</a> | <a href {{action attrs.onItemDelete task}}>delete</a>
+    </small>
+  </p>
+{{/if}}

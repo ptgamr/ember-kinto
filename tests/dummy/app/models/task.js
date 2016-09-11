@@ -6,5 +6,19 @@ const {
 
 export default DS.Model.extend({
   title: attr(),
-  done: attr('boolean')
+  done: attr('boolean'),
+  lastModified: attr(),
+  sOrder: attr('number'),
+
+  didUpdate() {
+    this.store.sync('task');
+  },
+
+  didCreate() {
+    this.store.sync('task');
+  },
+
+  didDelete() {
+    this.store.sync('task');
+  }
 });

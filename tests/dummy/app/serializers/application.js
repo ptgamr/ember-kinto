@@ -1,3 +1,8 @@
-import JSONSerializer from 'ember-data/serializers/json';
+import Ember from 'ember';
+import DS from 'ember-data';
 
-export default JSONSerializer.extend({});
+export default DS.RESTSerializer.extend({
+  keyForAttribute(attr) {
+    return Ember.String.underscore(attr);
+  }
+});

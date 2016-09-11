@@ -16,21 +16,34 @@ export default DS.Adapter.extend({
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.create(data)
         .then(res => {
-          this.sync(type.modelName);
-          resolve(res.data);
+          resolve({ [type.modelName]: res.data });
         })
         .catch(err => reject(err));
     });
   },
 
-  updateRecord() {
+  updateRecord(store, type, snapshot) {
+
+    let data = this.serialize(snapshot, { includeId: true });
+    let collection = this.db.collection(type.modelName);
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      collection.update(data)
+        .then(res => {
+          console.log(res)
+          resolve({
+            [type.modelName]: res.data
+          });
+        })
+        .catch(err => reject(err));
+    });
   },
 
   deleteRecord(store, type, snapshot) {
     let id = snapshot.id;
     let collection = this.db.collection(type.modelName);
 
-    return new Ember.RSVP.Promise((resolve, reject) => {
+    return new Ember.RSVP.Promise((resolve) => {
       collection.delete(id)
         .then(res => {
           Ember.Logger.debug('delete success', res);
@@ -38,7 +51,9 @@ export default DS.Adapter.extend({
         })
         .catch(err => {
           Ember.Logger.debug('delete failed', err);
-          reject(err);
+          // we do not want to reject here, because the record might no longer existed after kinto sync
+          // reject(err);
+          resolve();
         });
     });
   },
@@ -49,7 +64,9 @@ export default DS.Adapter.extend({
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.list().then(res => {
-        resolve(res.data);
+        resolve({
+          [type.modelName]: res.data
+        });
       })
       .catch(err => {
         reject(err);
