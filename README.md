@@ -24,7 +24,7 @@ Create a collection (task) inside that bucket:
 echo '{"data": {"id": "tasks"}}' | http POST https://ember-kinto-api.herokuapp.com/v1/buckets/ptgamr --auth="ptgamr:ptgamr" --verbose
 ```
 
-### Usages
+## Usages
 
 Include the add-on to your application and do the following setup:
 
@@ -66,30 +66,36 @@ export default KintoStore;
 
 ```
 
+### store.sync(modelName)
+
+Will trigger Kinto `collection.sync()`, the result of the sync will then be updated back to Ember Data store.
+
+### store.applyChanges(modelName, action, data)
+
+Should be use when receiving update from Websocket (Pusher or your own websocket), the changes will be apply to IndexDB first, then propagate back to Ember Data store
 
 
+## Contribute
 
-This README outlines the details of collaborating on this Ember addon.
-
-## Installation
+### Installation
 
 * `git clone <repository-url>` this repository
 * `cd ember-kinto`
 * `npm install`
 * `bower install`
 
-## Running
+### Running
 
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
-## Running Tests
+### Running Tests
 
 * `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
 * `ember test`
 * `ember test --server`
 
-## Building
+### Building
 
 * `ember build`
 
