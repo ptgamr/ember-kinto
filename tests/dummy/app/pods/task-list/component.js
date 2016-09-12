@@ -25,7 +25,7 @@ export default Ember.Component.extend({
       encrypted: true
     });
 
-    var channelName = 'ember-kinto-task-record';
+    var channelName = 'ptgamr-tasks-record';
 
     var channel = pusher.subscribe(channelName);
 
