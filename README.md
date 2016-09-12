@@ -1,5 +1,24 @@
 # Ember-kinto
 
+The offline first Ember Data adapter - backed by Mozilla's Kinto offline first API
+
+## Concepts
+
+## Preparation
+
+### Each user in a single bucket (this is usually happen after user Sign Up)
+
+Create the bucket (ptgamr):
+```
+echo '{"data": {"id": "ptgamr"}}' | http POST https://ember-kinto-api.herokuapp.com/v1/buckets --auth="ptgamr:ptgamr" --verbose
+```
+
+Create a collection (task) inside that bucket:
+```
+echo '{"data": {"id": "tasks"}}' | http POST https://ember-kinto-api.herokuapp.com/v1/buckets/ptgamr --auth="ptgamr:ptgamr" --verbose
+```
+
+
 This README outlines the details of collaborating on this Ember addon.
 
 ## Installation

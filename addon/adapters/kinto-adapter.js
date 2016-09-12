@@ -11,7 +11,8 @@ export default DS.Adapter.extend({
   createRecord(store, type, snapshot) {
 
     let data = this.serialize(snapshot);
-    let collection = this.db.collection(type.modelName);
+    let collectionName = this.pathForType(type.modelName);
+    let collection = this.db.collection(collectionName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.create(data)
@@ -25,7 +26,8 @@ export default DS.Adapter.extend({
   updateRecord(store, type, snapshot) {
 
     let data = this.serialize(snapshot, { includeId: true });
-    let collection = this.db.collection(type.modelName);
+    let collectionName = this.pathForType(type.modelName);
+    let collection = this.db.collection(collectionName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.update(data)
@@ -41,7 +43,8 @@ export default DS.Adapter.extend({
 
   deleteRecord(store, type, snapshot) {
     let id = snapshot.id;
-    let collection = this.db.collection(type.modelName);
+    let collectionName = this.pathForType(type.modelName);
+    let collection = this.db.collection(collectionName);
 
     return new Ember.RSVP.Promise((resolve) => {
       collection.delete(id)
@@ -59,8 +62,8 @@ export default DS.Adapter.extend({
   },
 
   findAll(store, type, sinceToken) {
-
-    let collection = this.db.collection(type.modelName);
+    let collectionName = this.pathForType(type.modelName);
+    let collection = this.db.collection(collectionName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.list().then(res => {
@@ -78,7 +81,9 @@ export default DS.Adapter.extend({
   },
 
   sync(modelName) {
-    let collection = this.db.collection(modelName);
+    let collectionName = this.pathForType(modelName);
+    let collection = this.db.collection(collectionName);
+
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.sync()
         .then(res => {
@@ -90,5 +95,10 @@ export default DS.Adapter.extend({
           reject(err);
         });
     });
+  },
+
+  pathForType(modelName) {
+    let dasherize = Ember.String.dasherize(modelName);
+    return Ember.String.pluralize(dasherize);
   }
 });
