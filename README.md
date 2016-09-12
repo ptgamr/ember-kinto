@@ -70,6 +70,8 @@ export default KintoStore;
 
 Will trigger Kinto `collection.sync()`, the result of the sync will then be updated back to Ember Data store.
 
+[More detail on how Kinto.sync() works](https://kintojs.readthedocs.io/en/latest/api/#fetching-and-publishing-changes)
+
 ### store.applyChanges(modelName, action, data)
 
 Should be use when receiving update from Websocket (Pusher or your own websocket), the changes will be apply to IndexDB first, then propagate back to Ember Data store
