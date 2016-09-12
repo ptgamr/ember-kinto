@@ -4,6 +4,8 @@ The offline first Ember Data adapter - backed by Mozilla's Kinto offline first A
 
 Demo: https://ember-kinto-demo.herokuapp.com/
 
+Note: THIS IS STILL A **WORK IN-PROGRESS**
+
 ## Concepts
 
 ## Preparation
@@ -19,6 +21,50 @@ Create a collection (task) inside that bucket:
 ```
 echo '{"data": {"id": "tasks"}}' | http POST https://ember-kinto-api.herokuapp.com/v1/buckets/ptgamr --auth="ptgamr:ptgamr" --verbose
 ```
+
+### Usages
+
+Include the add-on to your application and do the following setup:
+
+
+```javascript
+// app/adapters/application.js
+import { KintoAdapter } from 'ember-kinto';
+import Kinto from 'npm:kinto';
+
+const db = new Kinto({
+  remote: 'https://ember-kinto-api.herokuapp.com/v1/',
+  bucket: 'ptgamr',
+  dbPrefix: 'ptgamr', // TODO: should be the authorized user
+  headers: {
+    Authorization: 'Basic ' + btoa('ptgamr:ptgamr')
+  }
+});
+
+export default KintoAdapter.extend({
+  db
+});
+
+
+// app/serializers/application.js
+import Ember from 'ember';
+import DS from 'ember-data';
+
+export default DS.RESTSerializer.extend({
+  keyForAttribute(attr) {
+    return Ember.String.underscore(attr);
+  }
+});
+
+
+// app/services/store.js
+import { KintoStore } from 'ember-kinto';
+
+export default KintoStore;
+
+```
+
+
 
 
 This README outlines the details of collaborating on this Ember addon.

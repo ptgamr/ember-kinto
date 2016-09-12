@@ -1,4 +1,4 @@
-import KintoAdapter from 'ember-kinto';
+import { KintoAdapter } from 'ember-kinto';
 import Kinto from 'npm:kinto';
 
 const db = new Kinto({
