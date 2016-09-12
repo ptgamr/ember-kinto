@@ -8,6 +8,8 @@ Note: THIS IS STILL A **WORK IN-PROGRESS**
 
 ## Concepts
 
+![](http://i.imgur.com/MlsHBU5.png)
+
 ## Preparation
 
 ### Each user in a single bucket (this is usually happen after user Sign Up)
