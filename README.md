@@ -2,6 +2,8 @@
 
 The offline first Ember Data adapter - backed by Mozilla's Kinto offline first API
 
+Demo: https://ember-kinto-demo.herokuapp.com/
+
 ## Concepts
 
 ## Preparation
