@@ -1,11 +1,18 @@
 import Ember from 'ember';
 import DS from 'ember-data';
 
+const {
+  RSVP
+} = Ember;
+
 export default DS.Adapter.extend({
 
   db: null,
 
-  findRecord(store, type, id, snapshot) {
+  findRecord(/*store, type, id, snapshot*/) {
+    return new Ember.RSVP.Promise(resolve => {
+      resolve();
+    });
   },
 
   createRecord(store, type, snapshot) {
@@ -26,13 +33,11 @@ export default DS.Adapter.extend({
   updateRecord(store, type, snapshot) {
 
     let data = this.serialize(snapshot, { includeId: true });
-    let collectionName = this.pathForType(type.modelName);
-    let collection = this.db.collection(collectionName);
+    let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.update(data)
         .then(res => {
-          console.log(res)
           resolve({
             [type.modelName]: res.data
           });
@@ -43,8 +48,7 @@ export default DS.Adapter.extend({
 
   deleteRecord(store, type, snapshot) {
     let id = snapshot.id;
-    let collectionName = this.pathForType(type.modelName);
-    let collection = this.db.collection(collectionName);
+    let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve) => {
       collection.delete(id)
@@ -61,9 +65,8 @@ export default DS.Adapter.extend({
     });
   },
 
-  findAll(store, type, sinceToken) {
-    let collectionName = this.pathForType(type.modelName);
-    let collection = this.db.collection(collectionName);
+  findAll(store, type/*, sinceToken*/) {
+    let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.list().then(res => {
@@ -78,23 +81,88 @@ export default DS.Adapter.extend({
   },
 
   query() {
+    //TODO
   },
 
   sync(modelName) {
-    let collectionName = this.pathForType(modelName);
-    let collection = this.db.collection(collectionName);
+    let collection = this.collectionForType(modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
       collection.sync()
         .then(res => {
-          Ember.Logger.info('sync finished', res);
+          Ember.Logger.debug('sync finished', res);
           resolve(res);
         })
         .catch(err => {
-          Ember.Logger.info('sync failed', err);
+          Ember.Logger.debug('sync failed', err);
           reject(err);
         });
     });
+  },
+
+  applyChanges(modelName, action, data) {
+    Ember.Logger.debug('ApplyChanges: ', modelName, action, data);
+
+    let collection = this.collectionForType(modelName);
+
+    // currently using SEVER_WIN strategy
+    // TODO: CLIENT_WIN, MANUAL
+    let localOperationPromises = data.map(record => {
+      let result;
+      switch (action) {
+        case 'create':
+          result = new RSVP.Promise(resolve => {
+            collection.get(record.new.id)
+              .then(existing => resolve(existing.data))
+              .catch(() => {
+                // record not found
+                // this normally happend when the current user initiate the change (he also receive push message)
+                collection.create(record.new, { synced: true }).then((newRecord) => resolve(newRecord.data));
+              });
+          });
+          break;
+
+        case 'update':
+          result = collection.update(record.new, { synced: true }).then(() => record);
+          break;
+
+        case 'delete':
+          result = new RSVP.Promise(resolve => {
+            collection.get(record.new.id).then(existing => {
+              collection.delete(existing.data.id).then(() => resolve(record.new));
+            }).catch(() => {
+              resolve(record.new);
+            });
+          });
+          break;
+
+        default:
+          throw new Error('adapter::applyChanges: operation not supported');
+      }
+
+      return result;
+    });
+
+    return Ember.RSVP.all(localOperationPromises)
+      .then(results => {
+        let syncResult = {
+          created: [],
+          updated: [],
+          deleted: [],
+          conflicts: [],
+          published: []
+        };
+
+        syncResult[`${action}d`] = results;
+
+        return syncResult;
+      });
+  },
+
+  collectionForType(modelName) {
+    let collectionName = this.pathForType(modelName);
+    let collection = this.db.collection(collectionName);
+    return collection;
   },
 
   pathForType(modelName) {

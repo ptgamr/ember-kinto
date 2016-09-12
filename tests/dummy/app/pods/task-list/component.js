@@ -30,8 +30,10 @@ export default Ember.Component.extend({
     var channel = pusher.subscribe(channelName);
 
     channel.bind_all((evtName, data) => {
-      console.log(evtName, data);
-      this.get('store').sync('task');
+      if (evtName === 'pusher:subscription_succeeded') {
+        return;
+      }
+      this.get('store').applyChanges('task', evtName, data);
     });
   },
 
