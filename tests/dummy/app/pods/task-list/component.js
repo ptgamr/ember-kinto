@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import Pusher from 'npm:pusher-js';
 
 const {
   inject,
@@ -13,29 +12,6 @@ export default Ember.Component.extend({
   taskSorting: ['sOrder:desc'],
 
   sortedTasks: computed.sort('tasks', 'taskSorting'),
-
-  init() {
-    this._super(...arguments);
-
-    // Pusher credentials
-    // TODO: move these setup to a proper place ?
-    var pusherKey = '8dad656e802777288224';
-
-    var pusher = new Pusher(pusherKey, {
-      encrypted: true
-    });
-
-    var channelName = 'ptgamr-tasks-record';
-
-    var channel = pusher.subscribe(channelName);
-
-    channel.bind_all((evtName, data) => {
-      if (evtName === 'pusher:subscription_succeeded') {
-        return;
-      }
-      this.get('store').applyChanges('task', evtName, data);
-    });
-  },
 
   actions: {
     createTask() {
