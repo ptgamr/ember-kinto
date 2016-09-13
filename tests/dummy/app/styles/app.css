@@ -11,6 +11,10 @@ header {
   margin: 8px;
 }
 
+header h1 {
+  display: inline-block;
+}
+
 button, input[type="text"] {
   padding: 5px;
   color: #333;
@@ -79,6 +83,7 @@ button:hover {
 }
 
 .online, .offline {
+  display: inline-block;
   padding: 5px 10px;
   border: 1px solid;
   font-weight: bold;

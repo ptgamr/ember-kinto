@@ -20,9 +20,20 @@ module.exports = function(environment) {
     }
   };
 
+
   ENV.serviceWorker = {
-    enabled: true,
+    enabled: false,
     debug: true,
+    fallback: [
+      "/(.*) /index.html",
+    ],
+    precacheURLs: [
+      "/index.html",
+    ],
+    fastestURLs: [
+      { route: "/(.*)", method: "get", options: { origin: "https://fonts.gstatic.com" } },
+      { route: "/css", method: "get", options: { origin: "https://fonts.googleapis.com" } },
+    ],
   };
 
   if (environment === 'development') {
@@ -45,7 +56,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    ENV.serviceWorker.enabled = true;
   }
 
   return ENV;
