@@ -1,0 +1,17 @@
+{{#if isEditing}}
+  <p>
+    {{input value=item.name enter="finishEdit"}}
+    <small><a href {{action 'finishEdit'}}>done</a></small>
+  </p>
+{{else}}
+  <p>
+    {{#link-to "lists.detail" item.id class="nav-item"}}
+      <strong>{{item.name}} ({{item.numberOfDoneTasks}}/{{item.tasks.length}})</strong>
+      &nbsp;&nbsp;
+      <small>
+        <a href {{action 'startEdit'}}>edit</a> | <a href {{action attrs.onItemDelete item}}>X</a>
+      </small>
+    {{/link-to}}
+  </p>
+{{/if}}
+

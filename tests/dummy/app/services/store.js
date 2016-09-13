@@ -3,7 +3,7 @@ import Pusher from 'npm:pusher-js';
 
 export default KintoStore.extend({
 
-  syncCollections: ['tasks'],
+  syncCollections: ['list', 'task'],
   pusherKey: '8dad656e802777288224',
 
   init() {
@@ -19,14 +19,14 @@ export default KintoStore.extend({
   subscribeToCollection(collectionName) {
     // this should match your kinto-server config
     // TODO: find out the correct way to get bucket name here
-    let channelName = `ptgamr-${collectionName}-record`;
+    let channelName = `ptgamr-${collectionName}s-record`;
 
     let channel = this.pusher.subscribe(channelName);
     channel.bind_all((evtName, data) => {
       if (evtName === 'pusher:subscription_succeeded') {
         return;
       }
-      this.applyChanges('task', evtName, data);
+      this.applyChanges(collectionName, evtName, data);
     });
   }
 });

@@ -2,13 +2,15 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   beforeModel() {
-    return new Ember.RSVP.Promise(resolve => {
-      this.store.sync('task').then(resolve)
-        .catch(resolve);
-    });
+    return Ember.RSVP.Promise.all([
+      this.store.sync('list'),
+      this.store.sync('task'),
+    ]);
   },
 
-  model() {
-    return this.get('store').findAll('task');
+  afterModel(model, transition) {
+    if(transition.targetName.indexOf('list') === -1) {
+      return this.transitionTo('lists');
+    }
   }
 });

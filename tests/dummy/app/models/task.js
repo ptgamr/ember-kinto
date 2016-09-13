@@ -1,7 +1,9 @@
 import DS from 'ember-data';
 
 const {
-  attr
+  attr,
+  belongsTo,
+  hasMany
 } = DS;
 
 export default DS.Model.extend({
@@ -9,6 +11,9 @@ export default DS.Model.extend({
   done: attr('boolean'),
   lastModified: attr(),
   sOrder: attr('number'),
+
+  list: belongsTo('list'),
+  subTasks: hasMany('task'),
 
   didUpdate() {
     this.store.sync('task');

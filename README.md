@@ -21,7 +21,7 @@ echo '{"data": {"id": "ptgamr"}}' | http POST https://ember-kinto-api.herokuapp.
 
 Create a collection (task) inside that bucket:
 ```
-echo '{"data": {"id": "tasks"}}' | http POST https://ember-kinto-api.herokuapp.com/v1/buckets/ptgamr --auth="ptgamr:ptgamr" --verbose
+echo '{"data": {"id": "tasks"}}' | http POST https://ember-kinto-api.herokuapp.com/v1/buckets/ptgamr/collections --auth="ptgamr:ptgamr" --verbose
 ```
 
 ## Usages

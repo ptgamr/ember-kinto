@@ -43,7 +43,11 @@
     "pusher-js": "^3.2.1"
   },
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "ember",
+    "kinto",
+    "offline-first",
+    "ember-data"
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.6",

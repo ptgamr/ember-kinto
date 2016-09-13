@@ -8,10 +8,15 @@ const {
 export default Ember.Component.extend({
   store: inject.service(),
   taskTitle: '',
+  list: null,
   tasks: [],
   taskSorting: ['sOrder:desc'],
 
   sortedTasks: computed.sort('tasks', 'taskSorting'),
+
+  onItemCreate: Ember.K,
+  onItemUpdate: Ember.K,
+  onItemDelete: Ember.K,
 
   actions: {
     createTask() {
@@ -22,25 +27,26 @@ export default Ember.Component.extend({
         return;
       }
 
-      let taskOrder = Math.max(...this.get('tasks').mapBy('sOrder')) || 0;
+      let sOrder = Math.max(...this.get('tasks').mapBy('sOrder')) || 0;
 
-      let newTask = this.get('store').createRecord('task', {
+      let newTask = {
         title: taskTitle,
         done: false,
-        sOrder: ++ taskOrder
-      });
+        list: this.get('list'),
+        sOrder: ++ sOrder
+      };
 
-      newTask.save().then();
+      this.onItemCreate(newTask);
 
       this.set('taskTitle', '');
     },
 
     deleteTask(task) {
-      task.destroyRecord();
+      this.onItemDelete(task);
     },
 
     updateTask(task) {
-      task.save();
+      this.onItemUpdate(task);
     }
   }
 });

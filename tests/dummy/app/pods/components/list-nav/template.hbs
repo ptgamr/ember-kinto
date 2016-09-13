@@ -1,0 +1,9 @@
+{{#each sortedItems as |item|}}
+  {{list-item item=item onItemUpdate=(action 'update') onItemDelete=(action 'del')}}
+{{/each}}
+
+{{input value=listName enter="create"}}
+<br/>
+<br/>
+<button {{action 'create'}}>Create new list</button>
+

@@ -7,26 +7,37 @@ const {
 
 export default DS.Adapter.extend({
 
-  db: null,
+  db: null, // the Kinto instance, should be provided when extending this Adapter
+  __collections: [], // the private cache of kinto's collections
 
-  findRecord(/*store, type, id, snapshot*/) {
+  findRecord(store, type, id) {
+    let collection = this.collectionForType(type.modelName);
+
     return new Ember.RSVP.Promise(resolve => {
-      resolve();
+      collection
+        .get(id)
+        .then(existing => resolve({
+          [this.modelName]: existing.data
+        }))
+        .catch(() => resolve());
     });
   },
 
   createRecord(store, type, snapshot) {
 
     let data = this.serialize(snapshot);
-    let collectionName = this.pathForType(type.modelName);
-    let collection = this.db.collection(collectionName);
+    let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      collection.create(data)
+      collection
+        .create(data)
         .then(res => {
           resolve({ [type.modelName]: res.data });
         })
-        .catch(err => reject(err));
+        .catch(err => {
+          Ember.Logger.error('KintoAdapter:Error', err);
+          reject(err);
+        });
     });
   },
 
@@ -36,13 +47,17 @@ export default DS.Adapter.extend({
     let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      collection.update(data)
+      collection
+        .update(data)
         .then(res => {
           resolve({
             [type.modelName]: res.data
           });
         })
-        .catch(err => reject(err));
+        .catch(err => {
+          Ember.Logger.error('KintoAdapter:Error', err);
+          reject(err);
+        });
     });
   },
 
@@ -51,7 +66,8 @@ export default DS.Adapter.extend({
     let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve) => {
-      collection.delete(id)
+      collection
+        .delete(id)
         .then(res => {
           Ember.Logger.debug('delete success', res);
           resolve();
@@ -60,6 +76,7 @@ export default DS.Adapter.extend({
           Ember.Logger.debug('delete failed', err);
           // we do not want to reject here, because the record might no longer existed after kinto sync
           // reject(err);
+
           resolve();
         });
     });
@@ -69,19 +86,40 @@ export default DS.Adapter.extend({
     let collection = this.collectionForType(type.modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      collection.list().then(res => {
-        resolve({
-          [type.modelName]: res.data
+      collection
+        .list()
+        .then(res => {
+          resolve({
+            [this.pathForType(type.modelName)]: res.data
+          });
+        })
+        .catch(err => {
+          Ember.Logger.error('KintoAdapter:Error', err);
+          reject(err);
         });
-      })
-      .catch(err => {
-        reject(err);
-      });
     });
   },
 
-  query() {
-    //TODO
+  query(store, type, query) {
+    let collection = this.collectionForType(type.modelName);
+
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      collection
+        .list(
+          {
+            filters: query
+          }
+        )
+        .then(res => {
+          resolve({
+            [this.pathForType(type.modelName)]: res.data
+          });
+        })
+        .catch(err => {
+          Ember.Logger.error('KintoAdapter:Error', err);
+          reject(err);
+        });
+    });
   },
 
   sync(modelName) {
@@ -161,7 +199,13 @@ export default DS.Adapter.extend({
 
   collectionForType(modelName) {
     let collectionName = this.pathForType(modelName);
-    let collection = this.db.collection(collectionName);
+    let collection = this.__collections[collectionName];
+
+    if (!collection) {
+      collection = this.db.collection(collectionName);
+      this.__collections[collectionName] = collection;
+    }
+
     return collection;
   },
 
