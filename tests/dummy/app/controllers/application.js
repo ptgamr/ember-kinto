@@ -6,6 +6,10 @@ export default Ember.Controller.extend({
       this.store.clearLocalData().then(() => {
         this.transitionToRoute('lists');
       });
+    },
+
+    _sync() {
+      this.send('sync');
     }
   }
 });

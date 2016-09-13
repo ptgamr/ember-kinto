@@ -5,7 +5,7 @@ export default Ember.Route.extend({
     return this.store.findAll('task');
   },
   model(params) {
-    return this.store.peekRecord('list', params.listId);
+    return this.store.findRecord('list', params.listId);
   }
 });
 

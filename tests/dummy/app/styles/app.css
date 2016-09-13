@@ -11,6 +11,21 @@ header {
   margin: 8px;
 }
 
+button, input[type="text"] {
+  padding: 5px;
+  color: #333;
+  border: 1px solid #333;
+  background: #fff;
+  outline: none;
+  font-size: 1em;
+}
+
+button:hover {
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
 .HolyGrail {
   display: flex;
   min-height: 100vh;
@@ -36,6 +51,9 @@ header {
   /* put the nav on the left */
   order: -1;
 }
+.HolyGrail-nav input {
+  width: 90%;
+}
 .HolyGrail-nav .nav-item {
   display: block;
   width: 90%;
@@ -58,4 +76,19 @@ header {
 
 .done {
   text-decoration: line-through;
+}
+
+.online, .offline {
+  padding: 5px 10px;
+  border: 1px solid;
+  font-weight: bold;
+}
+
+.online {
+  color: #02b002;
+  border-color: #02b002;
+}
+.offline {
+  color: #d30000;
+  border-color: #d30000;
 }

@@ -2,8 +2,8 @@
   {{list-item item=item onItemUpdate=(action 'update') onItemDelete=(action 'del')}}
 {{/each}}
 
-{{input value=listName enter="create"}}
+{{input value=listName enter="create" placeholder="list name ..."}}
 <br/>
 <br/>
-<button {{action 'create'}}>Create new list</button>
+<button {{action 'create'}}>+ Create new list</button>
 

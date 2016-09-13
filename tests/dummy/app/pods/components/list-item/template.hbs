@@ -7,9 +7,9 @@
   <p>
     {{#link-to "lists.detail" item.id class="nav-item"}}
       <strong>{{item.name}} ({{item.numberOfDoneTasks}}/{{item.tasks.length}})</strong>
-      &nbsp;&nbsp;
+      <br/>
       <small>
-        <a href {{action 'startEdit'}}>edit</a> | <a href {{action attrs.onItemDelete item}}>X</a>
+        <a href {{action 'startEdit'}}>e</a> | <a href {{action attrs.onItemDelete item}}>x</a>
       </small>
     {{/link-to}}
   </p>

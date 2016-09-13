@@ -1,6 +1,7 @@
 <body class="HolyGrail">
   <header>
     <h1>Ember-kinto demo</h1>
+    {{online-status onOnLine=(action '_sync')}}
   </header>
   <div class="HolyGrail-body">
     {{outlet}}

@@ -1,5 +1,5 @@
-{{input value=taskTitle enter="createTask"}}
-<button {{action 'createTask'}}>Add</button>
+{{input value=taskTitle enter="createTask" placeholder="task name ..."}}
+<button {{action 'createTask'}}>+ Add new task</button>
 
 {{#each sortedTasks as |task|}}
   {{task-item task=task onItemUpdate=(action 'updateTask') onItemDelete=(action 'deleteTask')}}

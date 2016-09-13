@@ -16,9 +16,11 @@ export default DS.Adapter.extend({
     return new Ember.RSVP.Promise(resolve => {
       collection
         .get(id)
-        .then(existing => resolve({
-          [this.modelName]: existing.data
-        }))
+        .then(existing => {
+          resolve({
+            [type.modelName]: existing.data
+          });
+        })
         .catch(() => resolve());
     });
   },
