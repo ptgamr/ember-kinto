@@ -1,9 +1,6 @@
 import Ember from 'ember';
 import DS from 'ember-data';
-
-const {
-  RSVP
-} = Ember;
+import SyncResultObject from './sync-result-object';
 
 export default DS.Adapter.extend({
 
@@ -141,62 +138,14 @@ export default DS.Adapter.extend({
   },
 
   applyChanges(modelName, action, data) {
-    Ember.Logger.debug('ApplyChanges: ', modelName, action, data);
+    let syncResultObject = new SyncResultObject();
+    let changeObj = {
+      changes: data.map(record => record.new)
+    };
+    changeObj.lastModified = Math.max(...changeObj.changes.map(record => record.last_modified));
 
     let collection = this.collectionForType(modelName);
-
-    // currently using SEVER_WIN strategy
-    // TODO: CLIENT_WIN, MANUAL
-    let localOperationPromises = data.map(record => {
-      let result;
-      switch (action) {
-        case 'create':
-          result = new RSVP.Promise(resolve => {
-            collection.get(record.new.id)
-              .then(existing => resolve(existing.data))
-              .catch(() => {
-                // record not found
-                // this normally happend when the current user initiate the change (he also receive push message)
-                collection.create(record.new, { synced: true }).then((newRecord) => resolve(newRecord.data));
-              });
-          });
-          break;
-
-        case 'update':
-          result = collection.update(record.new, { synced: true }).then(() => record);
-          break;
-
-        case 'delete':
-          result = new RSVP.Promise(resolve => {
-            collection.get(record.new.id).then(existing => {
-              collection.delete(existing.data.id).then(() => resolve(record.new));
-            }).catch(() => {
-              resolve(record.new);
-            });
-          });
-          break;
-
-        default:
-          throw new Error('adapter::applyChanges: operation not supported');
-      }
-
-      return result;
-    });
-
-    return Ember.RSVP.all(localOperationPromises)
-      .then(results => {
-        let syncResult = {
-          created: [],
-          updated: [],
-          deleted: [],
-          conflicts: [],
-          published: []
-        };
-
-        syncResult[`${action}d`] = results;
-
-        return syncResult;
-      });
+    return collection.importChanges(syncResultObject, changeObj);
   },
 
   clear(modelName) {
