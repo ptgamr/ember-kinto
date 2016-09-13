@@ -24,6 +24,7 @@ module.exports = function(environment) {
   ENV.serviceWorker = {
     enabled: false,
     debug: true,
+    includeRegistration: false,
     fallback: [
       "/(.*) /index.html",
     ],
