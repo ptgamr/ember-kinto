@@ -197,6 +197,11 @@ export default DS.Adapter.extend({
       });
   },
 
+  clear(modelName) {
+    let collection = this.collectionForType(modelName);
+    return collection.clear();
+  },
+
   collectionForType(modelName) {
     let collectionName = this.pathForType(modelName);
     let collection = this.__collections[collectionName];

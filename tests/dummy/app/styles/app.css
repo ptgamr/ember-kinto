@@ -1,9 +1,14 @@
 body {
   font-family: 'Inconsolata', monospace;
+  margin: 0;
 }
 
 * {
   box-sizing: border-box;
+}
+
+header {
+  margin: 8px;
 }
 
 .HolyGrail {
@@ -15,6 +20,7 @@ body {
 .HolyGrail-body {
   display: flex;
   flex: 1;
+  margin: 8px;
 }
 
 .HolyGrail-content {

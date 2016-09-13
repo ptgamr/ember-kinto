@@ -3,6 +3,19 @@ import DS from 'ember-data';
 
 export default DS.Store.extend({
 
+  syncCollections: [],
+
+  clearLocalData() {
+    let promises = this.syncCollections.map(modelName => {
+      return this.adapterFor(modelName).clear(modelName)
+        .then(() => {
+          return this.unloadAll(modelName);
+        });
+    });
+
+    return Ember.RSVP.all(promises);
+  },
+
   sync(modelName) {
     return this.adapterFor(modelName).sync(modelName).then(syncResult => {
       this._applyChangesToEmberDataStore(modelName, syncResult);
