@@ -57,6 +57,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
+    ENV.serviceWorker.includeRegistration = true;
     ENV.serviceWorker.enabled = true;
   }
 
