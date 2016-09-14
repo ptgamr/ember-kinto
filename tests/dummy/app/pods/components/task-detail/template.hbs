@@ -1,0 +1,23 @@
+<strong>{{task.title}}</strong>
+
+<p>
+{{input type="text" placeholder="enter subtask ..." value=newSubTaskTitle}}
+<button {{action 'addSubTask'}}>+ Add subtask</button>
+</p>
+
+<p>
+  <ul>
+    {{#each task.subTasks as |subTask|}}
+      <li>
+        <input type="checkbox" checked={{subTask.done}} onclick={{action (action "toggleDone" subTask) value="target.checked"}}>
+        {{subTask.title}}
+      </li>
+    {{/each}}
+  </ul>
+</p>
+
+<p>
+<label>Notes:</label>
+{{textarea value=task.notes cols="50" rows="6"}}
+</p>
+<button {{action 'save'}}>Save Changes</button>

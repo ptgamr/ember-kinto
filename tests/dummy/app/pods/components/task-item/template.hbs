@@ -6,7 +6,9 @@
 {{else}}
   <p>
     <input type="checkbox" checked={{task.done}} onclick={{action "toggleDone" value="target.checked"}}>
-    <strong class="{{if task.done 'done' ''}}">{{task.title}}</strong>
+    {{#link-to 'lists.detail.task' task.id}}
+      <strong class="{{if task.done 'done' ''}}">{{task.title}}</strong>
+    {{/link-to}}
     &nbsp;&nbsp;
     <small>
       <a href {{action 'startEdit'}}>edit</a> | <a href {{action attrs.onItemDelete task}}>delete</a>

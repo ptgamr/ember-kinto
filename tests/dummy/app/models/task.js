@@ -11,9 +11,11 @@ export default DS.Model.extend({
   done: attr('boolean'),
   lastModified: attr(),
   sOrder: attr('number'),
+  notes: attr(),
 
   list: belongsTo('list'),
-  subTasks: hasMany('task'),
+  parentTask: belongsTo('task', { inverse: 'subTasks' }),
+  subTasks: hasMany('task', { inverse: 'parentTask' }),
 
   didUpdate() {
     this.store.sync('task');

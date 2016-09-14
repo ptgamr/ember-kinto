@@ -3,6 +3,7 @@ import DS from 'ember-data';
 
 export default DS.Store.extend({
 
+  syncing: false,
   syncCollections: [],
 
   clearLocalData() {
@@ -17,8 +18,10 @@ export default DS.Store.extend({
   },
 
   sync(modelName) {
+    this.set('syncing', true);
     return this.adapterFor(modelName).sync(modelName).then(syncResult => {
       this._applyChangesToEmberDataStore(modelName, syncResult);
+      this.set('syncing', false);
       Ember.Logger.debug('>>> store::sync completed');
     });
   },

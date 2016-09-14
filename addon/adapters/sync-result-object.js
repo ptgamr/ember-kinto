@@ -1,5 +1,10 @@
 /**
  * Synchronization result object.
+ *
+ * This is the copied implementation from https://github.com/Kinto/kinto.js/blob/master/src/collection.js
+ * as it's impossible to `import {SyncResultObject} from 'npm:kinto/collection/lib'` due to ember-browserify limitation
+ *
+ * This workaround can be remove after ember-cli ship with support to include npm module.
  */
 export default class SyncResultObject {
   /**
