@@ -2,11 +2,11 @@ import { KintoAdapter } from 'ember-kinto';
 import Kinto from 'npm:kinto';
 
 const db = new Kinto({
-  remote: 'https://ember-kinto-api.herokuapp.com/v1/',
-  bucket: 'ptgamr',
-  dbPrefix: 'ptgamr', // TODO: should be the authorized user
+  remote: 'http://192.241.238.230:8000/v1/',
+  bucket: 'app',
   headers: {
-    Authorization: 'Basic ' + btoa('ptgamr:ptgamr')
+    Authorization: 'Basic ' + btoa('anh:anh')
+    //Authorization: ''
   }
 });
 

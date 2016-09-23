@@ -1,14 +1,22 @@
 <body class="HolyGrail">
   <header>
     <h1>Ember-kinto demo</h1>
-    <a href="https://github.com/ptgamr/ember-kinto" target="_blank">[github repo]</a>
-    {{online-status onOnLine=(action '_sync') syncing=store.syncing}}
-    (the app can still be use when offline)
+    {{#if session.isAuthenticated}}
+      <a href="https://github.com/ptgamr/ember-kinto" target="_blank">[github repo]</a>
+      {{online-status onOnLine=(action '_sync') syncing=store.syncing}}
+      (the app can still be use when offline)
+      <ul>
+        <li>Provider: {{session.data.authenticated.provider}} - <a {{action 'invalidateSession'}} href>Logout</a></li>
+        <li>GitHub token: {{session.data.authenticated.authorizationCode}}</li>
+      </ul>
+    {{/if}}
   </header>
   <div class="HolyGrail-body">
     {{outlet}}
   </div>
   <footer>
-    <button {{action 'clearLocalData'}}>CLEAR LOCAL DATA</button>
+    {{#if session.isAuthenticated}}
+      <button {{action 'clearLocalData'}}>CLEAR LOCAL DATA</button>
+    {{/if}}
   </footer>
 </body>

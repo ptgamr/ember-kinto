@@ -20,6 +20,22 @@ module.exports = function(environment) {
     }
   };
 
+  ENV['ember-simple-auth'] = {
+    authenticationRoute: 'login',
+    routeAfterAuthentication: 'lists'
+  };
+
+  ENV['torii'] = {
+    sessionServiceName: 'session',
+    providers: {
+      'github-oauth2': {
+        apiKey: 'bc6a0e70dc379a6313ae',
+        scope: 'user',
+        redirectUri: 'http://localhost:4200/lists'
+      }
+    }
+  };
+
 
   ENV.serviceWorker = {
     enabled: false,

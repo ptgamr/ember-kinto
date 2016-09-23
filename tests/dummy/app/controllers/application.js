@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
+  session: Ember.inject.service(),
+
   actions: {
     clearLocalData() {
       this.store.clearLocalData().then(() => {
@@ -10,6 +12,10 @@ export default Ember.Controller.extend({
 
     _sync() {
       this.send('sync');
+    },
+
+    invalidateSession() {
+      this.get('session').invalidate();
     }
   }
 });

@@ -7,6 +7,7 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
+  this.route('login');
   this.route('lists', function() {
     this.route('detail', { path: ':listId' }, function() {
       this.route('task', { path: '/task/:taskId' });
