@@ -125,15 +125,19 @@ export default DS.Adapter.extend({
     let collection = this.collectionForType(modelName);
 
     return new Ember.RSVP.Promise((resolve, reject) => {
-      collection.sync()
-        .then(res => {
-          Ember.Logger.debug('sync finished', res);
-          resolve(res);
-        })
-        .catch(err => {
-          Ember.Logger.debug('sync failed', err);
-          reject(err);
-        });
+      collection.sync({
+        headers: {
+          Authorization: this.get('authorizationHeader')
+        }
+      })
+      .then(res => {
+        Ember.Logger.debug('sync finished', res);
+        resolve(res);
+      })
+      .catch(err => {
+        Ember.Logger.debug('sync failed', err);
+        reject(err);
+      });
     });
   },
 
