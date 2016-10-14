@@ -15,6 +15,7 @@ export default Ember.Controller.extend({
     },
 
     invalidateSession() {
+      this.store.clearLocalData();
       this.get('session').invalidate();
     }
   }

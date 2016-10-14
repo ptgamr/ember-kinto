@@ -6,8 +6,8 @@
       {{online-status onOnLine=(action '_sync') syncing=store.syncing}}
       (the app can still be use when offline)
       <ul>
-        <li>Provider: {{session.data.authenticated.provider}} - <a {{action 'invalidateSession'}} href>Logout</a></li>
-        <li>GitHub token: {{session.data.authenticated.authorizationCode}}</li>
+        <li>UserId: <strong>{{session.data.authenticated.userId}}</strong> - <a {{action 'invalidateSession'}} href>Logout</a></li>
+        <li>GitHub token: {{session.data.authenticated.accessToken}}</li>
       </ul>
     {{/if}}
   </header>
